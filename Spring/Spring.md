@@ -252,7 +252,7 @@ Spring的单例对象的初始化主要分为三步：
 
 ![](http://blog-img.coolsen.cn/img/1584758309616_10.png)
 
-```
+```java
  /** 一级缓存：用于存放完全初始化好的 bean **/
  private final Map<String, Object> singletonObjects = new ConcurrentHashMap<String, Object>(256);
 
@@ -267,6 +267,26 @@ Spring的单例对象的初始化主要分为三步：
 
  创建中状态：是指对象已经 new 出来了但是所有的属性均为 null 等待被 init
  **/
+```
+
+```java
+protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+		Object singletonObject = this.singletonObjects.get(beanName);
+		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			synchronized (this.singletonObjects) {
+				singletonObject = this.earlySingletonObjects.get(beanName);
+				if (singletonObject == null && allowEarlyReference) {
+					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
+					if (singletonFactory != null) {
+						singletonObject = singletonFactory.getObject();
+						this.earlySingletonObjects.put(beanName, singletonObject);
+						this.singletonFactories.remove(beanName);
+					}
+				}
+			}
+		}
+		return singletonObject;
+	}
 ```
 
 1. A 创建过程中需要 B，于是 A 将自己放到三级缓里面 ，去实例化 B
