@@ -143,18 +143,18 @@ Bean的生命周期是由容器来管理的。主要在创建和销毁两个时�
 
 ### 创建过程：
 
-1，实例化bean对象，以及设置bean属性； 
-2，如果通过Aware接口声明了依赖关系，则会注入Bean对容器基础设施层面的依赖，Aware接口是为了感知到自身的一些属性。容器管理的Bean一般不需要知道容器的状态和直接使用容器。但是在某些情况下是需要在Bean中对IOC容器进行操作的。这时候需要在bean中设置对容器的感知。SpringIOC容器也提供了该功能，它是通过特定的Aware接口来完成的。 
+1. 实例化bean对象，以及设置bean属性； 
+2. 如果通过Aware接口声明了依赖关系，则会注入Bean对容器基础设施层面的依赖，Aware接口是为了感知到自身的一些属性。容器管理的Bean一般不需要知道容器的状态和直接使用容器。但是在某些情况下是需要在Bean中对IOC容器进行操作的。这时候需要在bean中设置对容器的感知。SpringIOC容器也提供了该功能，它是通过特定的Aware接口来完成的。 
 比如BeanNameAware接口，可以知道自己在容器中的名字。 
 如果这个Bean已经实现了BeanFactoryAware接口，可以用这个方式来获取其它Bean。 
 （如果Bean实现了BeanNameAware接口，调用setBeanName()方法，传入Bean的名字。 
 如果Bean实现了BeanClassLoaderAware接口，调用setBeanClassLoader()方法，传入ClassLoader对象的实例。 
 如果Bean实现了BeanFactoryAware接口，调用setBeanFactory()方法，传入BeanFactory对象的实例。） 
-3，紧接着会调用BeanPostProcess的前置初始化方法postProcessBeforeInitialization，主要作用是在Spring完成实例化之后，初始化之前，对Spring容器实例化的Bean添加自定义的处理逻辑。有点类似于AOP。 
-4，如果实现了BeanFactoryPostProcessor接口的afterPropertiesSet方法，做一些属性被设定后的自定义的事情。 
-5，调用Bean自身定义的init方法，去做一些初始化相关的工作。 
-6，调用BeanPostProcess的后置初始化方法，postProcessAfterInitialization去做一些bean初始化之后的自定义工作。 
-7，完成以上创建之后就可以在应用里使用这个Bean了。
+3. 紧接着会调用BeanPostProcess的前置初始化方法postProcessBeforeInitialization，主要作用是在Spring完成实例化之后，初始化之前，对Spring容器实例化的Bean添加自定义的处理逻辑。有点类似于AOP。 
+4. 如果实现了BeanFactoryPostProcessor接口的afterPropertiesSet方法，做一些属性被设定后的自定义的事情。 
+5. 调用Bean自身定义的init方法，去做一些初始化相关的工作。 
+6. 调用BeanPostProcess的后置初始化方法，postProcessAfterInitialization去做一些bean初始化之后的自定义工作。 
+7. 完成以上创建之后就可以在应用里使用这个Bean了。
 
 ### 销毁过程：
 
