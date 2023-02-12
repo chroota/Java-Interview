@@ -252,15 +252,30 @@ Spring的单例对象的初始化主要分为三步：
 
 ![](http://blog-img.coolsen.cn/img/1584758309616_10.png)
 
-举例：A的某个field或者setter依赖了B的实例对象，同时B的某个field或者setter依赖了A的实例对象”这种循环依赖的情况。A首先完成了
+```
+ /** 一级缓存：用于存放完全初始化好的 bean **/
+ private final Map<String, Object> singletonObjects = new ConcurrentHashMap<String, Object>(256);
 
-初始化的第一步（createBeanINstance实例化），并且将自己提前曝光到singletonFactories中。
+ /** 二级缓存：存放原始的 bean 对象（尚未填充属性），用于解决循环依赖 */
+ private final Map<String, Object> earlySingletonObjects = new HashMap<String, Object>(16);
 
-此时进行初始化的第二步，发现自己依赖对象B，此时就尝试去get(B)，发现B还没有被create，所以走create流程，B在初始化第一步的时候发现自己依赖了对象A，于是尝试get(A)，尝试一级缓存singletonObjects(肯定没有，因为A还没初始化完全)，尝试二级缓存earlySingletonObjects（也没有），尝试三级缓存singletonFactories，由于A通过ObjectFactory将自己提前曝光了，所以B能够通过
+ /** 三级级缓存：存放 bean 工厂对象，用于解决循环依赖 */
+ private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<String, ObjectFactory<?>>(16);
 
-ObjectFactory.getObject拿到A对象(虽然A还没有初始化完全，但是总比没有好呀)，B拿到A对象后顺利完成了初始化阶段1、2、3，完全初始化之后将自己放入到一级缓存singletonObjects中。
+ /**
+ bean 的获取过程：先从一级获取，失败再从二级、三级里面获取
 
-此时返回A中，A此时能拿到B的对象顺利完成自己的初始化阶段2、3，最终A也完成了初始化，进去了一级缓存singletonObjects中，而且更加幸运的是，由于B拿到了A的对象引用，所以B现在hold住的A对象完成了初始化。
+ 创建中状态：是指对象已经 new 出来了但是所有的属性均为 null 等待被 init
+ */
+```
+
+1. A 创建过程中需要 B，于是 A 将自己放到三级缓里面 ，去实例化 B
+2. B 实例化的时候发现需要 A，于是 B 先查一级缓存，没有，再查二级缓存，还是没有，再查三级缓存，找到了！
+然后把三级缓存里面的这个 A 放到二级缓存里面，并删除三级缓存里面的 A
+3. B 顺利初始化完毕，将自己放到一级缓存里面（此时B里面的A依然是创建中状态）
+4. 然后回来接着创建 A，此时 B 已经创建结束，直接从一级缓存里面拿到 B ，然后完成创建，并将自己放到一级缓存里面
+如此一来便解决了循环依赖的问题
+
 
 ## 17. Spring 中的单例 bean 的线程安全问题？
 
