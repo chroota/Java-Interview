@@ -270,23 +270,32 @@ Spring的单例对象的初始化主要分为三步：
 ```
 
 ```java
+@Nullable
 protected Object getSingleton(String beanName, boolean allowEarlyReference) {
-		Object singletonObject = this.singletonObjects.get(beanName);
-		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
-			synchronized (this.singletonObjects) {
-				singletonObject = this.earlySingletonObjects.get(beanName);
-				if (singletonObject == null && allowEarlyReference) {
-					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
-					if (singletonFactory != null) {
-						singletonObject = singletonFactory.getObject();
-						this.earlySingletonObjects.put(beanName, singletonObject);
-						this.singletonFactories.remove(beanName);
-					}
-				}
-			}
-		}
-		return singletonObject;
-	}
+   Object singletonObject = this.singletonObjects.get(beanName);
+   // 这个bean 正处于 创建阶段
+   if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+      // 并发控制
+      synchronized (this.singletonObjects) {
+         // 单例缓存是否存在
+         singletonObject = this.earlySingletonObjects.get(beanName);
+         // 是否运行获取 bean factory 创建出的 bean
+         if (singletonObject == null && allowEarlyReference) {
+            // 获取缓存中的 ObjectFactory
+            ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
+            if (singletonFactory != null) {
+               singletonObject = singletonFactory.getObject();
+               // 将对象缓存到 earlySingletonObject中
+               this.earlySingletonObjects.put(beanName, singletonObject);
+               // 从工厂缓冲中移除
+               this.singletonFactories.remove(beanName);
+            }
+         }
+      }
+   }
+   return singletonObject;
+}
+
 ```
 
 1. A 创建过程中需要 B，于是 A 将自己放到三级缓里面 ，去实例化 B
