@@ -9,6 +9,8 @@
 - 对齐填充（Padding）
 
 ![object-memory-layout.png](https://cdn-doocs.oss-cn-shenzhen.aliyuncs.com/gh/doocs/jvm@main/images/object-memory-layout.png)
+![image](https://user-images.githubusercontent.com/7061196/219069891-c23bc62d-a1a1-400e-9188-52a8cb60505b.png)
+
 
 ### 对象头
 
