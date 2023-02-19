@@ -53,6 +53,3 @@
 
 ## 分布式
 * [分布式](/分布式/面试题.md)
-
-## 关于我
-[库森的校招经历](https://mp.weixin.qq.com/s/Q1uNpj_6mGscy5JbMqMY-Q)
