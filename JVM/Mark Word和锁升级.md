@@ -8,3 +8,10 @@
 
 * 锁升级
 <img width="625" alt="image" src="https://user-images.githubusercontent.com/7061196/221391738-f33260fe-7acb-4ba8-b888-ecce6d910a53.png">
+
+* 内置锁对比
+<img width="1310" alt="image" src="https://user-images.githubusercontent.com/7061196/221391850-f2071876-d3ff-42c5-a99e-350835c091a5.png">
+
+<img width="1315" alt="image" src="https://user-images.githubusercontent.com/7061196/221391868-ceec5e85-44f3-4ffe-8211-c163e1f6c96f.png">
+
+
