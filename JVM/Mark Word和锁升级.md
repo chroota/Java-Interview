@@ -5,3 +5,6 @@
 
 * 64位 mark word
 <img width="1333" alt="image" src="https://user-images.githubusercontent.com/7061196/221348259-50f9b5ac-6d60-4f45-9e78-17be1433493f.png">
+
+* 锁升级
+<img width="625" alt="image" src="https://user-images.githubusercontent.com/7061196/221391738-f33260fe-7acb-4ba8-b888-ecce6d910a53.png">
